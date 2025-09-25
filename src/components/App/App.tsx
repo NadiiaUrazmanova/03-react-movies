@@ -12,6 +12,7 @@ export default function App() {
 
   const handleSearch = async (query: string) => {
     setMovies([]);
+    
 
     try {
       const results = await fetchMovie(query);
