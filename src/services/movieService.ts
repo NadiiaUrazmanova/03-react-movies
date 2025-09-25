@@ -1,24 +1,35 @@
 
 import axios from 'axios';
-import Movie from '../types/movie';
+import type { Movie } from '../types/movie';
+// import { useState } from 'react';
 
 const myKey = import.meta.env.VITE_API_KEY;
 
-const config = {
+
+
+interface MovieHttpResponse {
+  results: Movie[];
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+
+export const fetchMovie = async (topic: string): Promise<Movie[]> => {
+  const response = await axios.get<MovieHttpResponse>(
+    'https://api.themoviedb.org/3/search/movie',
+    {
     params: {
-    query,
+        query: topic,
+        include_adult: false,
+        language: "en-US",
+        page: 1,
   },
   headers: {
     accept: 'application/json',
     Authorization: `Bearer ${myKey}`,
   }
-};
-
-export default async function fetchMovies(query, page = 1): Promise<Movie> {
-    try {
-        const res = await axios.get<Movie[]>('https://api.themoviedb.org/3/search/movie', config);
-        return res.data;
-    } catch (err) {
-        return (err);
-    }
 }
+  );
+  return response.data.results;
+};

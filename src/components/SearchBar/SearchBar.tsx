@@ -1,40 +1,52 @@
-import React from 'react';
-import css from '../SearchBar/SearchBar.module.css'
-
+import React from "react";
+import toast from "react-hot-toast";
+import styles from "./SearchBar.module.css";
 
 interface SearchBarProps {
-    onSubmit: (value: string) => void;
+  onSubmit: (value: string) => void;
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
-    const handleSubmit = (formData: FormData) => {
-        const input = formData.get("query") as string;        
-    };
-    return (
-        <header className={css.header}>
-            <div className={css.container}>
-                <a
-                    className={css.link}
-                    href="https://www.themoviedb.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by TMDB
-                </a>
-                <form action={handleSubmit} className={css.form}>
-                    <input
-                        className={css.input}
-                        type="text"
-                        name="query"
-                        autoComplete="off"
-                        placeholder="Search movies..."
-                        autoFocus
-                    />
-                    <button className={css.button} type="submit">
-                        Search
-                    </button>
-                </form>
-            </div>
-        </header>
-    )
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const query = formData.get("query")?.toString().trim();
+
+    if (!query) {
+      toast.error("Please enter your search query.");
+      return;
     }
+
+    onSubmit(query);
+    event.currentTarget.reset();
+  };
+
+  return (
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <a
+          className={styles.link}
+          href="https://www.themoviedb.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by TMDB
+        </a>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            className={styles.input}
+            type="text"
+            name="query"
+            autoComplete="off"
+            placeholder="Search movies..."
+            autoFocus
+          />
+          <button className={styles.button} type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+    </header>
+  );
+}

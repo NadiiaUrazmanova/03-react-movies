@@ -1,25 +1,33 @@
+import React from "react";
+import type { Movie } from "../types/movie";
 import css from "../MovieGrid/MovieGrid.module.css"
 
 interface MovieGridProps {
-    // onSelect: 
-    // movies: string[]
+    movies: Movie[];
+    onSelect: (movie: Movie) => void;
 }
 
-export default function MovieGrid() {
-    return (
-        <ul className={css.grid}>
-  
-  <li>
-    <div className={css.card}>
-      <img 
-		    className={css.image} 
-		    src="https://image.tmdb.org/t/p/w500/poster-path" 
-		    alt="movie title" 
-		    loading="lazy" 
-		  />
-	    <h2 className={css.title}>Movie title</h2>
-    </div>
-  </li>
-</ul>
-    )
+export default function MovieGrid({ movies, onSelect }: MovieGridProps) {
+  if (movies.length === 0) return null;
+
+  return (
+    <ul className={css.grid}>
+      {movies.map((movie) => (
+        <li key={movie.id}>
+          <div
+            className={css.card}
+            onClick={() => onSelect(movie)}            
+          >
+            <img
+              className={css.image}
+              src="https://image.tmdb.org/t/p/w500/poster-path"
+              alt={movie.title}
+              loading="lazy"
+            />
+            <h2 className={css.title}>{movie.title}</h2>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
 }
